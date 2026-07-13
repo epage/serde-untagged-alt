@@ -86,7 +86,7 @@ enum Unexpected {
 impl serde::de::Error for Error {
     fn custom<T: Display>(msg: T) -> Self {
         let imp = ErrorImpl::Custom(msg.to_string());
-        Error { imp }
+        Self { imp }
     }
 
     fn invalid_type(unexpected: serde::de::Unexpected, expected: &dyn Expected) -> Self {
@@ -94,7 +94,7 @@ impl serde::de::Error for Error {
             unexpected: Unexpected::from_serde(unexpected),
             expected: expected.to_string(),
         };
-        Error { imp }
+        Self { imp }
     }
 
     fn invalid_value(unexpected: serde::de::Unexpected, expected: &dyn Expected) -> Self {
@@ -102,7 +102,7 @@ impl serde::de::Error for Error {
             unexpected: Unexpected::from_serde(unexpected),
             expected: expected.to_string(),
         };
-        Error { imp }
+        Self { imp }
     }
 
     fn invalid_length(len: usize, expected: &dyn Expected) -> Self {
@@ -110,7 +110,7 @@ impl serde::de::Error for Error {
             len,
             expected: expected.to_string(),
         };
-        Error { imp }
+        Self { imp }
     }
 
     fn unknown_variant(variant: &str, expected: &'static [&'static str]) -> Self {
@@ -118,7 +118,7 @@ impl serde::de::Error for Error {
             variant: variant.to_owned(),
             expected,
         };
-        Error { imp }
+        Self { imp }
     }
 
     fn unknown_field(field: &str, expected: &'static [&'static str]) -> Self {
@@ -126,17 +126,17 @@ impl serde::de::Error for Error {
             field: field.to_owned(),
             expected,
         };
-        Error { imp }
+        Self { imp }
     }
 
     fn missing_field(field: &'static str) -> Self {
         let imp = ErrorImpl::MissingField { field };
-        Error { imp }
+        Self { imp }
     }
 
     fn duplicate_field(field: &'static str) -> Self {
         let imp = ErrorImpl::DuplicateField { field };
-        Error { imp }
+        Self { imp }
     }
 }
 
@@ -168,47 +168,47 @@ impl Error {
 impl Unexpected {
     fn from_serde(unexpected: serde::de::Unexpected) -> Self {
         match unexpected {
-            serde::de::Unexpected::Bool(value) => Unexpected::Bool(value),
-            serde::de::Unexpected::Unsigned(value) => Unexpected::Unsigned(value),
-            serde::de::Unexpected::Signed(value) => Unexpected::Signed(value),
-            serde::de::Unexpected::Float(value) => Unexpected::Float(value),
-            serde::de::Unexpected::Char(value) => Unexpected::Char(value),
-            serde::de::Unexpected::Str(value) => Unexpected::Str(value.to_owned()),
-            serde::de::Unexpected::Bytes(value) => Unexpected::Bytes(value.to_owned()),
-            serde::de::Unexpected::Unit => Unexpected::Unit,
-            serde::de::Unexpected::Option => Unexpected::Option,
-            serde::de::Unexpected::NewtypeStruct => Unexpected::NewtypeStruct,
-            serde::de::Unexpected::Seq => Unexpected::Seq,
-            serde::de::Unexpected::Map => Unexpected::Map,
-            serde::de::Unexpected::Enum => Unexpected::Enum,
-            serde::de::Unexpected::UnitVariant => Unexpected::UnitVariant,
-            serde::de::Unexpected::NewtypeVariant => Unexpected::NewtypeVariant,
-            serde::de::Unexpected::TupleVariant => Unexpected::TupleVariant,
-            serde::de::Unexpected::StructVariant => Unexpected::StructVariant,
-            serde::de::Unexpected::Other(msg) => Unexpected::Other(msg.to_owned()),
+            serde::de::Unexpected::Bool(value) => Self::Bool(value),
+            serde::de::Unexpected::Unsigned(value) => Self::Unsigned(value),
+            serde::de::Unexpected::Signed(value) => Self::Signed(value),
+            serde::de::Unexpected::Float(value) => Self::Float(value),
+            serde::de::Unexpected::Char(value) => Self::Char(value),
+            serde::de::Unexpected::Str(value) => Self::Str(value.to_owned()),
+            serde::de::Unexpected::Bytes(value) => Self::Bytes(value.to_owned()),
+            serde::de::Unexpected::Unit => Self::Unit,
+            serde::de::Unexpected::Option => Self::Option,
+            serde::de::Unexpected::NewtypeStruct => Self::NewtypeStruct,
+            serde::de::Unexpected::Seq => Self::Seq,
+            serde::de::Unexpected::Map => Self::Map,
+            serde::de::Unexpected::Enum => Self::Enum,
+            serde::de::Unexpected::UnitVariant => Self::UnitVariant,
+            serde::de::Unexpected::NewtypeVariant => Self::NewtypeVariant,
+            serde::de::Unexpected::TupleVariant => Self::TupleVariant,
+            serde::de::Unexpected::StructVariant => Self::StructVariant,
+            serde::de::Unexpected::Other(msg) => Self::Other(msg.to_owned()),
         }
     }
 
-    fn as_serde(&self) -> serde::de::Unexpected {
+    fn as_serde(&self) -> serde::de::Unexpected<'_> {
         match self {
-            Unexpected::Bool(value) => serde::de::Unexpected::Bool(*value),
-            Unexpected::Unsigned(value) => serde::de::Unexpected::Unsigned(*value),
-            Unexpected::Signed(value) => serde::de::Unexpected::Signed(*value),
-            Unexpected::Float(value) => serde::de::Unexpected::Float(*value),
-            Unexpected::Char(value) => serde::de::Unexpected::Char(*value),
-            Unexpected::Str(value) => serde::de::Unexpected::Str(value),
-            Unexpected::Bytes(value) => serde::de::Unexpected::Bytes(value),
-            Unexpected::Unit => serde::de::Unexpected::Unit,
-            Unexpected::Option => serde::de::Unexpected::Option,
-            Unexpected::NewtypeStruct => serde::de::Unexpected::NewtypeStruct,
-            Unexpected::Seq => serde::de::Unexpected::Seq,
-            Unexpected::Map => serde::de::Unexpected::Map,
-            Unexpected::Enum => serde::de::Unexpected::Enum,
-            Unexpected::UnitVariant => serde::de::Unexpected::UnitVariant,
-            Unexpected::NewtypeVariant => serde::de::Unexpected::NewtypeVariant,
-            Unexpected::TupleVariant => serde::de::Unexpected::TupleVariant,
-            Unexpected::StructVariant => serde::de::Unexpected::StructVariant,
-            Unexpected::Other(msg) => serde::de::Unexpected::Other(msg),
+            Self::Bool(value) => serde::de::Unexpected::Bool(*value),
+            Self::Unsigned(value) => serde::de::Unexpected::Unsigned(*value),
+            Self::Signed(value) => serde::de::Unexpected::Signed(*value),
+            Self::Float(value) => serde::de::Unexpected::Float(*value),
+            Self::Char(value) => serde::de::Unexpected::Char(*value),
+            Self::Str(value) => serde::de::Unexpected::Str(value),
+            Self::Bytes(value) => serde::de::Unexpected::Bytes(value),
+            Self::Unit => serde::de::Unexpected::Unit,
+            Self::Option => serde::de::Unexpected::Option,
+            Self::NewtypeStruct => serde::de::Unexpected::NewtypeStruct,
+            Self::Seq => serde::de::Unexpected::Seq,
+            Self::Map => serde::de::Unexpected::Map,
+            Self::Enum => serde::de::Unexpected::Enum,
+            Self::UnitVariant => serde::de::Unexpected::UnitVariant,
+            Self::NewtypeVariant => serde::de::Unexpected::NewtypeVariant,
+            Self::TupleVariant => serde::de::Unexpected::TupleVariant,
+            Self::StructVariant => serde::de::Unexpected::StructVariant,
+            Self::Other(msg) => serde::de::Unexpected::Other(msg),
         }
     }
 }

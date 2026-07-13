@@ -14,7 +14,7 @@ pub(crate) struct ErasedValue {
 
 impl ErasedValue {
     pub(crate) unsafe fn new<T>(value: T) -> Self {
-        ErasedValue {
+        Self {
             ptr: Box::into_raw(Box::new(value)).cast(),
             drop: {
                 unsafe fn drop<T>(ptr: *mut ()) {

@@ -16,13 +16,13 @@ fn test_string_or_array_string() {
             D: Deserializer<'de>,
         {
             UntaggedEnumVisitor::new()
-                .string(|string| Ok(Value::Single(string.to_owned())))
+                .string(|string| Ok(Self::Single(string.to_owned())))
                 .seq(|mut seq| {
                     let mut array = Vec::new();
                     while let Some(element) = seq.next_element()? {
                         array.push(element);
                     }
-                    Ok(Value::Multiple(array))
+                    Ok(Self::Multiple(array))
                 })
                 .deserialize(deserializer)
         }
@@ -83,9 +83,9 @@ fn test_contains_map_key() {
                 .map(|map| {
                     let value: serde_json::Value = map.deserialize()?;
                     if let Ok(failure) = String::deserialize(&value["failure"]) {
-                        Ok(Response::Failure(failure))
+                        Ok(Self::Failure(failure))
                     } else {
-                        Ok(Response::Success(value))
+                        Ok(Self::Success(value))
                     }
                 })
                 .deserialize(deserializer)

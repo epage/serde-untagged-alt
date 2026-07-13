@@ -30,7 +30,7 @@
 //!
 //! Inside the `/* ... */`, we list each type that the untagged enum needs to
 //! support deserializing from, giving a closure that turns the input into
-//! $MyType. The following types are supported:
+//! $`MyType`. The following types are supported:
 //!
 //! - bool
 //! - i8, i16, i32, i64, i128, u8, u16, u32, u64, u128
@@ -231,6 +231,12 @@ pub struct UntaggedEnumVisitor<'closure, 'de, Value> {
         Option<Box<dyn for<'access> FnOnce(Seq<'access, 'de>) -> Result<Value, Error> + 'closure>>,
     visit_map:
         Option<Box<dyn for<'access> FnOnce(Map<'access, 'de>) -> Result<Value, Error> + 'closure>>,
+}
+
+impl<'closure, 'de, Value> Default for UntaggedEnumVisitor<'closure, 'de, Value> {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl<'closure, 'de, Value> UntaggedEnumVisitor<'closure, 'de, Value> {
@@ -690,7 +696,7 @@ impl<'closure, 'de, Value> Visitor<'de> for UntaggedEnumVisitor<'closure, 'de, V
     where
         E: serde::de::Error,
     {
-        use crate::int::IntKind::*;
+        use crate::int::IntKind::{I128, I16, I32, I64, I8, U128, U16, U32, U64, U8};
         self.dispatch_integer(v, [I8, I16, I32, I64, I128, U8, U16, U32, U64, U128])
     }
 
@@ -698,7 +704,7 @@ impl<'closure, 'de, Value> Visitor<'de> for UntaggedEnumVisitor<'closure, 'de, V
     where
         E: serde::de::Error,
     {
-        use crate::int::IntKind::*;
+        use crate::int::IntKind::{I128, I16, I32, I64, I8, U128, U16, U32, U64, U8};
         self.dispatch_integer(v, [I16, I32, I64, I128, I8, U8, U16, U32, U64, U128])
     }
 
@@ -706,7 +712,7 @@ impl<'closure, 'de, Value> Visitor<'de> for UntaggedEnumVisitor<'closure, 'de, V
     where
         E: serde::de::Error,
     {
-        use crate::int::IntKind::*;
+        use crate::int::IntKind::{I128, I16, I32, I64, I8, U128, U16, U32, U64, U8};
         self.dispatch_integer(v, [I32, I64, I128, I8, I16, U8, U16, U32, U64, U128])
     }
 
@@ -714,7 +720,7 @@ impl<'closure, 'de, Value> Visitor<'de> for UntaggedEnumVisitor<'closure, 'de, V
     where
         E: serde::de::Error,
     {
-        use crate::int::IntKind::*;
+        use crate::int::IntKind::{I128, I16, I32, I64, I8, U128, U16, U32, U64, U8};
         self.dispatch_integer(v, [I64, I128, I8, I16, I32, U8, U16, U32, U64, U128])
     }
 
@@ -722,7 +728,7 @@ impl<'closure, 'de, Value> Visitor<'de> for UntaggedEnumVisitor<'closure, 'de, V
     where
         E: serde::de::Error,
     {
-        use crate::int::IntKind::*;
+        use crate::int::IntKind::{I128, I16, I32, I64, I8, U128, U16, U32, U64, U8};
         self.dispatch_integer(v, [I128, I8, I16, I32, I64, U8, U16, U32, U64, U128])
     }
 
@@ -730,7 +736,7 @@ impl<'closure, 'de, Value> Visitor<'de> for UntaggedEnumVisitor<'closure, 'de, V
     where
         E: serde::de::Error,
     {
-        use crate::int::IntKind::*;
+        use crate::int::IntKind::{I128, I16, I32, I64, I8, U128, U16, U32, U64, U8};
         self.dispatch_integer(v, [U8, U16, U32, U64, U128, I8, I16, I32, I64, I128])
     }
 
@@ -738,7 +744,7 @@ impl<'closure, 'de, Value> Visitor<'de> for UntaggedEnumVisitor<'closure, 'de, V
     where
         E: serde::de::Error,
     {
-        use crate::int::IntKind::*;
+        use crate::int::IntKind::{I128, I16, I32, I64, I8, U128, U16, U32, U64, U8};
         self.dispatch_integer(v, [U16, U32, U64, U128, U8, I8, I16, I32, I64, I128])
     }
 
@@ -746,7 +752,7 @@ impl<'closure, 'de, Value> Visitor<'de> for UntaggedEnumVisitor<'closure, 'de, V
     where
         E: serde::de::Error,
     {
-        use crate::int::IntKind::*;
+        use crate::int::IntKind::{I128, I16, I32, I64, I8, U128, U16, U32, U64, U8};
         self.dispatch_integer(v, [U32, U64, U128, U8, U16, I8, I16, I32, I64, I128])
     }
 
@@ -754,7 +760,7 @@ impl<'closure, 'de, Value> Visitor<'de> for UntaggedEnumVisitor<'closure, 'de, V
     where
         E: serde::de::Error,
     {
-        use crate::int::IntKind::*;
+        use crate::int::IntKind::{I128, I16, I32, I64, I8, U128, U16, U32, U64, U8};
         self.dispatch_integer(v, [U64, U128, U8, U16, U32, I8, I16, I32, I64, I128])
     }
 
@@ -762,7 +768,7 @@ impl<'closure, 'de, Value> Visitor<'de> for UntaggedEnumVisitor<'closure, 'de, V
     where
         E: serde::de::Error,
     {
-        use crate::int::IntKind::*;
+        use crate::int::IntKind::{I128, I16, I32, I64, I8, U128, U16, U32, U64, U8};
         self.dispatch_integer(v, [U128, U8, U16, U32, U64, I8, I16, I32, I64, I128])
     }
 
@@ -795,7 +801,7 @@ impl<'closure, 'de, Value> Visitor<'de> for UntaggedEnumVisitor<'closure, 'de, V
         if let Some(visit_char) = self.visit_char {
             visit_char(v).map_err(error::unerase)
         } else if self.visit_str.is_some() {
-            self.visit_str(v.encode_utf8(&mut [0u8; 4]))
+            self.visit_str(v.encode_utf8(&mut [0_u8; 4]))
         } else {
             Err(E::invalid_type(Unexpected::Char(v), &self))
         }
