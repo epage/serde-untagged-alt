@@ -107,7 +107,7 @@ fn test_expecting() {
         .seq(|_seq| Ok(()))
         .deserialize(&serde_json::Value::Null)
         .unwrap_err();
-    let expected_message = "invalid type: null, expected an array";
+    let expected_message = "invalid type: null, expected unspecified";
     assert_eq!(error.to_string(), expected_message);
 
     let error = UntaggedEnumVisitor::new()
@@ -115,7 +115,7 @@ fn test_expecting() {
         .bool(|_bool| Ok(()))
         .deserialize(&serde_json::Value::Null)
         .unwrap_err();
-    let expected_message = "invalid type: null, expected a boolean or array";
+    let expected_message = "invalid type: null, expected unspecified";
     assert_eq!(error.to_string(), expected_message);
 
     let error = UntaggedEnumVisitor::new()
@@ -124,7 +124,7 @@ fn test_expecting() {
         .i8(|_int| Ok(()))
         .deserialize(&serde_json::Value::Null)
         .unwrap_err();
-    let expected_message = "invalid type: null, expected a boolean, integer or array";
+    let expected_message = "invalid type: null, expected unspecified";
     assert_eq!(error.to_string(), expected_message);
 
     let error = UntaggedEnumVisitor::new()
@@ -134,7 +134,7 @@ fn test_expecting() {
         .i16(|_int| Ok(()))
         .deserialize(&serde_json::Value::Null)
         .unwrap_err();
-    let expected_message = "invalid type: null, expected a boolean, integer or array";
+    let expected_message = "invalid type: null, expected unspecified";
     assert_eq!(error.to_string(), expected_message);
 
     let error = UntaggedEnumVisitor::<()>::new()
@@ -143,9 +143,8 @@ fn test_expecting() {
     let expected_message = "invalid type: null, expected unspecified";
     assert_eq!(error.to_string(), expected_message);
 
-    let ty = "T";
     let error = UntaggedEnumVisitor::<()>::new()
-        .expecting(format_args!("foo of type {ty}"))
+        .expecting("foo of type T")
         .deserialize(&serde_json::Value::Null)
         .unwrap_err();
     let expected_message = "invalid type: null, expected foo of type T";
