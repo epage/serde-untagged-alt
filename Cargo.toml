@@ -5,7 +5,7 @@ resolver = "2"
 repository = "https://github.com/epage/serde-untagged-alt"
 license = "MIT OR Apache-2.0"
 edition = "2021"
-rust-version = "1.65.0"  # MSRV
+rust-version = "1.68.0"  # MSRV
 include = [
   "/build.rs",
   "/src/**/*",
@@ -118,8 +118,8 @@ lto = true
 name = "serde-untagged-alt"
 version = "0.0.1"
 description = "Serde `Visitor` implementation for deserializing untagged enums (alternative design)"
-categories = []
-keywords = []
+categories = ["encoding", "no-std"]
+keywords = ["serde", "untagged"]
 repository.workspace = true
 license.workspace = true
 edition.workspace = true
@@ -143,6 +143,17 @@ pre-release-replacements = [
 default = []
 
 [dependencies]
+erased-serde = { version = "0.4.2", default-features = false, features = ["alloc"] }
+serde_core = { version = "1.0.220", default-features = false, features = ["alloc"] }
+typeid = "1"
+
+[target.'cfg(any())'.dependencies]
+serde = { version = "1.0.220", default-features = false }
+
+[dev-dependencies]
+serde = "1.0.220"
+serde_derive = "1.0.220"
+serde_json = "1.0.110"
 
 [lints]
 workspace = true
