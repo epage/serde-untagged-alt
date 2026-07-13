@@ -1,8 +1,8 @@
 # These settings are synced to GitHub by https://probot.github.io/apps/settings/
 
 repository:
-  description: "DESCRIPTION"
-  homepage: "https://docs.rs/PROJECT"
+  description: "Serde `Visitor` implementation for deserializing untagged enums"
+  homepage: "https://docs.rs/serde-untagged-alt"
   topics: ""
   has_issues: true
   has_projects: false

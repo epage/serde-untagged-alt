@@ -2,7 +2,7 @@
 resolver = "2"
 
 [workspace.package]
-repository = "REPOSITORY"
+repository = "https://github.com/epage/serde-untagged-alt"
 license = "MIT OR Apache-2.0"
 edition = "2021"
 rust-version = "1.65.0"  # MSRV
@@ -115,9 +115,9 @@ lto = true
 # debug = "line-tables-only"  # requires Cargo 1.71
 
 [package]
-name = "PROJECT"
+name = "serde-untagged-alt"
 version = "0.0.1"
-description = "DESCRIPTION"
+description = "Serde `Visitor` implementation for deserializing untagged enums (alternative design)"
 categories = []
 keywords = []
 repository.workspace = true
