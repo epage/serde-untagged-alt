@@ -205,7 +205,7 @@ pub mod de {
 }
 
 pub struct UntaggedEnumVisitor<'closure, 'de, Value> {
-    expecting: Option<Box<dyn Display + 'closure>>,
+    expecting: Option<&'static str>,
     visit_bool: Option<Box<dyn FnOnce(bool) -> Result<Value, Error> + 'closure>>,
     visit_i8: Option<Box<dyn FnOnce(i8) -> Result<Value, Error> + 'closure>>,
     visit_i16: Option<Box<dyn FnOnce(i16) -> Result<Value, Error> + 'closure>>,
@@ -286,9 +286,8 @@ impl<'closure, 'de, Value> UntaggedEnumVisitor<'closure, 'de, Value> {
     /// # where
     /// #     D: Deserializer<'de>,
     /// # {
-    /// #     let max = 1;
     /// UntaggedEnumVisitor::new()
-    ///     .expecting(format_args!("a string or number between 0 and {max}"))
+    ///     .expecting("a string or number between 0 and 1")
     ///     /* ... */
     ///     .deserialize(deserializer)
     /// # }
@@ -325,11 +324,11 @@ impl<'closure, 'de, Value> UntaggedEnumVisitor<'closure, 'de, Value> {
     /// # }
     /// ```
     #[must_use]
-    pub fn expecting(mut self, expecting: impl Display + 'closure) -> Self {
+    pub fn expecting(mut self, expecting: &'static str) -> Self {
         if self.expecting.is_some() {
             panic!("UntaggedEnumVisitor::expecting already set");
         }
-        self.expecting = Some(Box::new(expecting));
+        self.expecting = Some(expecting);
         self
     }
 
@@ -628,57 +627,11 @@ impl<'closure, 'de, Value> Visitor<'de> for UntaggedEnumVisitor<'closure, 'de, V
     type Value = Value;
 
     fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
-        if let Some(expecting) = &self.expecting {
+        if let Some(expecting) = self.expecting {
             return expecting.fmt(formatter);
         }
 
-        // "a string or array"
-        // "an integer, string, or map"
-        let mut message = Expecting::new(formatter);
-        if self.visit_bool.is_some() {
-            message.push("a", "boolean")?;
-        }
-        if self.visit_i8.is_some()
-            || self.visit_i16.is_some()
-            || self.visit_i32.is_some()
-            || self.visit_i64.is_some()
-            || self.visit_i128.is_some()
-            || self.visit_u8.is_some()
-            || self.visit_u16.is_some()
-            || self.visit_u32.is_some()
-            || self.visit_u64.is_some()
-            || self.visit_u128.is_some()
-        {
-            message.push("an", "integer")?;
-        }
-        if self.visit_f32.is_some() || self.visit_f64.is_some() {
-            message.push("a", "float")?;
-        }
-        if self.visit_char.is_some() {
-            message.push("a", "character")?;
-        }
-        if self.visit_str.is_some() {
-            message.push("a", "string")?;
-        }
-        if self.visit_borrowed_str.is_some() && self.visit_str.is_none() {
-            message.push("a", "borrowed string")?;
-        }
-        if self.visit_bytes.is_some()
-            || self.visit_borrowed_bytes.is_some()
-            || self.visit_byte_buf.is_some()
-        {
-            message.push("a", "byte array")?;
-        }
-        if self.visit_unit.is_some() || self.visit_none.is_some() {
-            message.push("", "null")?;
-        }
-        if self.visit_seq.is_some() {
-            message.push("an", "array")?;
-        }
-        if self.visit_map.is_some() {
-            message.push("a", "map")?;
-        }
-        message.flush()
+        formatter.write_str("unspecified")
     }
 
     fn visit_bool<E>(self, v: bool) -> Result<Self::Value, E>
