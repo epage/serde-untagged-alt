@@ -31,7 +31,7 @@ impl<'de> DeserializeSeed<'de> for &mut dyn ErasedDeserializeSeed<'de> {
     where
         D: Deserializer<'de>,
     {
-        let deserializer = Box::new(<dyn erased_serde::Deserializer>::erase(deserializer));
+        let deserializer = Box::new(<dyn erased_serde::Deserializer<'_>>::erase(deserializer));
         self.erased_deserialize(deserializer)
             .map_err(serde::de::Error::custom)
     }

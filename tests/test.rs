@@ -58,11 +58,11 @@ fn test_borrowed() {
     }
 
     let j = &r#" "..." "#.to_owned();
-    let v: Value = serde_json::from_str(j).unwrap();
+    let v: Value<'_> = serde_json::from_str(j).unwrap();
     assert_eq!(v, Value::Single("..."));
 
     let j = &r#" ["a","z"] "#.to_owned();
-    let v: Value = serde_json::from_str(j).unwrap();
+    let v: Value<'_> = serde_json::from_str(j).unwrap();
     assert_eq!(v, Value::Multiple(vec!["a", "z"]));
 }
 
