@@ -19,14 +19,14 @@ pub(crate) fn unerase<E: serde::de::Error>(err: Error) -> E {
 impl serde::de::StdError for Error {}
 
 impl Display for Error {
-    fn fmt(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         let error = self.as_serde::<serde::de::value::Error>();
         Display::fmt(&error, formatter)
     }
 }
 
 impl Debug for Error {
-    fn fmt(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         let error = self.as_serde::<serde::de::value::Error>();
         Debug::fmt(&error, formatter)
     }
@@ -89,7 +89,7 @@ impl serde::de::Error for Error {
         Self { imp }
     }
 
-    fn invalid_type(unexpected: serde::de::Unexpected, expected: &dyn Expected) -> Self {
+    fn invalid_type(unexpected: serde::de::Unexpected<'_>, expected: &dyn Expected) -> Self {
         let imp = ErrorImpl::InvalidType {
             unexpected: Unexpected::from_serde(unexpected),
             expected: expected.to_string(),
@@ -97,7 +97,7 @@ impl serde::de::Error for Error {
         Self { imp }
     }
 
-    fn invalid_value(unexpected: serde::de::Unexpected, expected: &dyn Expected) -> Self {
+    fn invalid_value(unexpected: serde::de::Unexpected<'_>, expected: &dyn Expected) -> Self {
         let imp = ErrorImpl::InvalidValue {
             unexpected: Unexpected::from_serde(unexpected),
             expected: expected.to_string(),
@@ -166,7 +166,7 @@ impl Error {
 }
 
 impl Unexpected {
-    fn from_serde(unexpected: serde::de::Unexpected) -> Self {
+    fn from_serde(unexpected: serde::de::Unexpected<'_>) -> Self {
         match unexpected {
             serde::de::Unexpected::Bool(value) => Self::Bool(value),
             serde::de::Unexpected::Unsigned(value) => Self::Unsigned(value),
